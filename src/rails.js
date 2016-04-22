@@ -58,12 +58,18 @@
 
     // Up-to-date Cross-Site Request Forgery token
     csrfToken: function() {
-     return $('meta[name=csrf-token]').attr('content');
+      var el = document.querySelector('meta[name=csrf-token]');
+      if(el) {
+        return el.content;
+      }
     },
 
     // URL param that must contain the CSRF token
     csrfParam: function() {
-     return $('meta[name=csrf-param]').attr('content');
+      var el = document.querySelector('meta[name=csrf-param]');
+      if(el) {
+        return el.content;
+      }
     },
 
     // Make sure that every Ajax request sends the CSRF token
@@ -74,7 +80,10 @@
 
     // Make sure that all forms have actual up-to-date tokens (cached forms contain old ones)
     refreshCSRFTokens: function(){
-      $('form input[name="' + rails.csrfParam() + '"]').val(rails.csrfToken());
+      var inputs = document.querySelectorAll('form input[name="' + rails.csrfParam() + '"]');
+      Array.prototype.forEach.call(inputs, function(input) {
+        input.value = rails.csrfToken();
+      });
     },
 
     // Triggers an event on an element and returns false if the event result is false
